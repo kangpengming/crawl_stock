@@ -7,6 +7,7 @@ public enum EasterPath {
 
     HOMEPATH("https://www.eastmoney.com/"),
 
+
     STOCKDATAPATH("http://pdfm.eastmoney.com/EM_UBG_PDTI_Fast/api/js");
     private String path;
 
