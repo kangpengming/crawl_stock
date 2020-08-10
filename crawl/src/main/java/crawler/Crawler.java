@@ -1,25 +1,18 @@
-package Crawler;
+package crawler;
 
 import Request.HomeRequest;
 import Request.StockDataRequest;
-import com.sun.javafx.fxml.builder.URLBuilder;
-import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
-import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -46,6 +39,19 @@ public class Crawler {
 
     public void setConfig(HttpClientConfig config) {
         this.config = config;
+    }
+
+    public String craw(String url) {
+        HttpGet httpGet = new HttpGet(url);
+        Future<HttpResponse> responseFuture = this.client.execute(httpGet, null);
+        try {
+            HttpResponse httpResponse = responseFuture.get();
+            HttpEntity entity = httpResponse.getEntity();
+            return EntityUtils.toString(entity, "UTF-8");
+        }catch (Exception e) {
+            logger.error("request is error, url is: {}", url, e);
+        }
+        return null;
     }
 
     public String crawHome(HomeRequest homeRequest){

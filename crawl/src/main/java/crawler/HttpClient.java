@@ -1,4 +1,4 @@
-package Crawler;
+package crawler;
 
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;

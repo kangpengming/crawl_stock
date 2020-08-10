@@ -1,6 +1,6 @@
-import Crawler.Crawler;
-import Crawler.HttpClientConfig;
-import Parser.RespondParser;
+import crawler.Crawler;
+import crawler.HttpClientConfig;
+import parser.RespondParser;
 import Request.HomeRequest;
 import Request.StockDataRequest;
 
@@ -20,11 +20,11 @@ public class Main {
         String content = crawler.crawHome(new HomeRequest());
         RespondParser parser = new RespondParser(content);
         List<String> list = new ArrayList<String>();
-        parser.getLinks("/body/div[2]/div[8]/div/div[2]/div[1]/div[2]", "指数", list);
+        parser.getLinksByLabel("/body/div[2]/div[8]/div/div[2]/div[1]/div[2]", "指数", list);
 
         StockDataRequest stockDataRequest = new StockDataRequest();
-        stockDataRequest.setId();
-        crawler.crawlData()
+        //stockDataRequest.setId();
+        //crawler.crawlData()
         System.out.println(list);
 
     }

@@ -1,16 +1,15 @@
-package Parser;
+package parser;
 
-import Crawler.test.FileReader;
+import crawler.test.FileReader;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.seimicrawler.xpath.JXDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import parser.lianjia.HouseInfo;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 
 /**
@@ -28,7 +27,52 @@ public class RespondParser {
         jxDocument = JXDocument.create(str);
     }
 
-    public void getLinks(String xpath, String label, List<String> links) {
+    public void loadRecordList(String xpath, HouseInfo houseInfo) {
+        List<Object> jxNode = jxDocument.sel(xpath);
+        for (Object o : jxNode) {
+            if (o instanceof Element) {
+                for (Node node : ((Element) o).childNodes()) {
+                    houseInfo.addDealRecord(FrontendEleParser.parseDealRecord(node));
+                }
+            }
+        }
+    }
+
+    public Map<String, String> getLianjiaBaseAttr(String xpath) {
+        Map<String, String> map = new HashMap<String, String>();
+        List<Object> jxNode = jxDocument.sel(xpath);
+        for (Object o : jxNode) {
+            if (o instanceof Element) {
+                for (Node node : ((Element) o).childNodes()) {
+                    map.putAll(FrontendEleParser.parseLi(node));
+                }
+            }
+        }
+        return map;
+    }
+
+    public String getLianjiaLocation(String xpath) {
+        List<Object> list = jxDocument.sel(xpath);
+        String title = ((String) list.get(0));
+        int index = title.indexOf(" ");
+        if (index == -1) {
+            return title;
+        }
+        return title.substring(0, index - 1);
+    }
+
+    public void getLianjiaChengjiaoLinks(String xpath, List<String> links) {
+        List<Object> list = jxDocument.sel(xpath);
+        for (Object e : list) {
+            if (e instanceof Element) {
+                Element element = (Element)e;
+                String url = element.attributes().get("href");
+                links.add(url);
+            }
+        }
+    }
+
+    public void getLinksByLabel(String xpath, String label, List<String> links) {
         xpath = removeHtml(xpath);
         List<Object> list = jxDocument.sel(xpath);
         for (Object e : list) {
@@ -115,6 +159,7 @@ public class RespondParser {
         String test = reader.readFile("/Users/kp/IdeaProjects/java/stock/crawl/src/main/resources/raw/easter.html");
         RespondParser respondParser = new RespondParser(test);
         List<String> links = new ArrayList<String>();
-        respondParser.getLinks("/body/div[2]/div[8]/div/div[2]/div[1]/div[2]", "指数", links);
+        respondParser.getLinksByLabel("/body/div[2]/div[8]/div/div[2]/div[1]/div[2]", "指数", links);
+        System.out.println(links);
     }
 }
