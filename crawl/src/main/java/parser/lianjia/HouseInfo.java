@@ -55,9 +55,9 @@ public class HouseInfo {
         this.baseInfo = new BaseInfo();
         baseInfo.setHouseType(baseMap.get(attrs[0]));
         baseInfo.setFloor(baseMap.get(attrs[1]));
-        baseInfo.setArchitectureArea(baseMap.get(attrs[2]) == null ? null : baseMap.get(attrs[2]).replace("㎡", ""));
+        baseInfo.setArchitectureArea(baseMap.get(attrs[2]) == null ? "" : baseMap.get(attrs[2]).replace("㎡", ""));
         baseInfo.setHouseStruct(baseMap.get(attrs[3]));
-        baseInfo.setHouseArea(baseMap.get(attrs[4]) == null ? null : baseMap.get(attrs[4]).replace("㎡", ""));
+        baseInfo.setHouseArea(baseMap.get(attrs[4]) == null ? "" : baseMap.get(attrs[4]).replace("㎡", ""));
         baseInfo.setArchitectureType(baseMap.get(attrs[5]));
         baseInfo.setHouseDirect(baseMap.get(attrs[6]));
         baseInfo.setArchYear(baseMap.get(attrs[7]));

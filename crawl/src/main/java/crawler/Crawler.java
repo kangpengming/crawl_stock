@@ -3,10 +3,16 @@ package crawler;
 import Request.HomeRequest;
 import Request.StockDataRequest;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -26,6 +32,7 @@ public class Crawler {
     private CloseableHttpAsyncClient client;
     private HttpClient httpClient;
     private HttpClientConfig config;
+    private HttpClientPool httpClientPool;
 
     public Crawler() {
     }
@@ -33,8 +40,9 @@ public class Crawler {
     public void init() {
         this.httpClient = new HttpClient();
         this.httpClient.setConfig(config);
-        this.client = this.httpClient.init();
-        this.client.start();
+        this.httpClientPool = new HttpClientPool();
+        this.httpClientPool.setConfig(this.config);
+        this.httpClientPool.init();
     }
 
     public void setConfig(HttpClientConfig config) {
@@ -43,6 +51,8 @@ public class Crawler {
 
     public String craw(String url) {
         HttpGet httpGet = new HttpGet(url);
+        httpGet.setHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.39");
+        this.client = this.httpClientPool.getCloseableHttpAsyncClient();
         Future<HttpResponse> responseFuture = this.client.execute(httpGet, null);
         try {
             HttpResponse httpResponse = responseFuture.get();

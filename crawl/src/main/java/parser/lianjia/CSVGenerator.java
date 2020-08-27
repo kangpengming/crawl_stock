@@ -73,6 +73,7 @@ public class CSVGenerator {
         try {
             for (Method method : methods) {
                 Object str = method.invoke(o);
+
                 if (str.getClass() == String.class) {
                     stringBuilder.append(str);
                     stringBuilder.append(",");
@@ -93,6 +94,9 @@ public class CSVGenerator {
         for (Field field : fields) {
             String name = field.getName();
             try {
+                if ("attrs".equals(name)) {
+                    continue;
+                }
                 Method method = clz.getDeclaredMethod("get" + name.substring(0, 1).toUpperCase() + name.substring(1));
                 methods.add(method);
             } catch (Exception e) {
